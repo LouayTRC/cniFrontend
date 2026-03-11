@@ -1,0 +1,14 @@
+
+  <h5 class="card-title p-3">Session By Browser</h5>
+  <ngx-simplebar class="px-3"  style="max-height: 310px;">
+    @for (data of browserData; track $index) {
+      <div class="d-flex justify-content-between align-items-center p-2">
+        <span class="align-middle fw-medium">{{ data.name }}</span>
+        <span class="fw-semibold text-muted">{{ data.percentage }}%</span>
+        <span class="fw-semibold text-muted">{{ data.amount }}k</span>
+      </div>
+    }
+  </ngx-simplebar>
+  <div class="text-center p-3">
+    <button type="button" class="btn btn-light shadow-none w-100">View All</button>
+  </div>
