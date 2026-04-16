@@ -1,6 +1,6 @@
 import { Component, inject, ViewChild, type OnInit } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterOutlet, type Event } from '@angular/router';
-import { TitleService } from '@core/services/title.service';
+
 import {
   NgProgressComponent,
   NgProgressModule,
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit  {
   @ViewChild(NgProgressComponent) progressBar!: NgProgressComponent
 
   private router = inject(Router)
-  private titleService = inject(TitleService)
+  
 
   constructor() {
     this.router.events.subscribe((event: Event) => {
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit  {
   }
 
   ngOnInit(): void {
-    this.titleService.init()
+   
   }
 
   checkRouteChange(routerEvent: Event) {
