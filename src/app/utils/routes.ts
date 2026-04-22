@@ -13,3 +13,17 @@ export const ADMIN_ROUTES: Route[] = [
     pathMatch:"full"
   }
 ]
+
+
+export const RESPONSABLE_ROUTES: Route[] = [
+  {
+    path: 'dossiers',
+    component: AdminUsersComponent,
+    data: { title: 'Gestion des dossiers' },
+  },
+  {
+    path:'',
+    redirectTo:'dossiers',
+    pathMatch:"full"
+  }
+]

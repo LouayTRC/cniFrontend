@@ -33,9 +33,10 @@
 
 
 .wrapper {
-     width: 100%;
-     height: 100%;
-     position: relative;
+     height: 100vh;
+     display: flex;
+     flex-direction: column;
+     // overflow: hidden;
 
      // Main Nav
      .main-nav {
@@ -210,11 +211,12 @@
 
      // Main Content
      .page-content {
-          position: relative;
-          transition: all 0.3s ease-in-out;
-          min-height: calc(100vh - $topbar-height);
-          padding: calc($spacer * 1) calc($spacer * 0.5) $footer-height calc($spacer * 0.5);
+          flex: 1;
+          display: flex;
+          flex-direction: column;
           margin-left: $main-nav-width;
+          // overflow: hidden; // no page scroll
+          min-height: 0;
      }
 }
 

@@ -10,11 +10,14 @@ import { Store } from '@ngrx/store';
 import { Router, RouterLink } from "@angular/router";
 import { ToastrService } from 'ngx-toastr';
 import { PopupComponent } from "@component/reusables/popup/popup.component";
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChartOptions } from '@/app/utils/enums';
+
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, PopupComponent],
+  imports: [CommonModule, FormsModule, RouterLink, PopupComponent, NgApexchartsModule],
   templateUrl: './admin-users.component.html',
   styleUrl: './admin-users.component.scss'
 })
@@ -36,6 +39,39 @@ export class AdminUsersComponent {
   // ✅ popup state
   showPopup: boolean = false;
   selectedUserId: string | null = null;
+
+
+  pieChart: Partial<ChartOptions> = {
+  chart: {
+    height: 320,
+    type: 'pie',
+  },
+  series: [44, 55, 41, 17, 15],
+  labels: ['Series 1', 'Series 2', 'Series 3', 'Series 4', 'Series 5'],
+  colors: ["#1e84c4", "#7f56da", "#ed5565", "#f9b931", "#1bb394"],
+  legend: {
+    show: true,
+    position: 'bottom',
+    horizontalAlign: 'center',
+    floating: false,
+    fontSize: '14px',
+    offsetX: 0,
+    offsetY: 7,
+  },
+  responsive: [
+    {
+      breakpoint: 600,
+      options: {
+        chart: {
+          height: 240,
+        },
+        legend: {
+          show: false,
+        },
+      },
+    },
+  ],
+};
 
   constructor(
     private userService: UserService,

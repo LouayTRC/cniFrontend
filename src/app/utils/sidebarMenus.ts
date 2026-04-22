@@ -29,6 +29,19 @@ export const ADMIN_MENU: MenuItem[] = [
   },
 ]
 
+export const RESPONSABLE_MENU: MenuItem[] = [
+  {
+    key: 'general',
+    label: 'MENU',
+    isTitle: true,
+  },
+  {
+    key: 'apps-chat',
+    icon: 'solar:letter-broken',
+    label: 'Gestion des Dossiers',
+    link: '/responsable/dossiers',
+  },
+]
 
 export const MENU: MenuItem[] = [
   {

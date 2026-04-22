@@ -100,6 +100,7 @@ export class AddUserComponent {
   }
 
   onSubmit() {
+
   if (this.registerForm.invalid) return;
 
   const payload = this.registerForm.value;
@@ -133,6 +134,7 @@ export class AddUserComponent {
 
     this.userService.addUser(payload, this.httpHeaders).subscribe({
       next: () => {
+
         this.loading = false;
 
         this.toastr.success(
