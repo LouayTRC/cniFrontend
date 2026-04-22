@@ -16,6 +16,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { provideStoreDevtools } from '@ngrx/store-devtools'
 import { provideToastr } from 'ngx-toastr'
 import { CookieService } from 'ngx-cookie-service';
+import { rootReducer } from '@/store';
+import { localStorageSyncReducer } from '@/store/layout/layout-reducers';
 // import { FakeBackendProvider } from './helper/fake-backend'
 // import { AuthenticationEffects } from '@store/authentication/authentication.effects'
 
@@ -26,7 +28,7 @@ export const appConfig: ApplicationConfig = {
     CookieService,
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideStore({ auth: authReducer }),
+    provideStore(rootReducer, { metaReducers: [localStorageSyncReducer] }),
     importProvidersFrom(BrowserAnimationsModule, BrowserModule),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideEffects(AuthEffects),

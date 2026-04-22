@@ -1,0 +1,76 @@
+<div class="row justify-content-center">
+  <div class="col-xl-5">
+    <div class="card auth-card">
+      <div class="card-body px-3 py-5">
+
+        <!-- Dynamic Title -->
+        <h2 class="fw-bold text-center fs-18">
+          {{ isEditMode ? 'Update User' : 'Créer un compte' }}
+        </h2>
+
+        <p class="text-muted text-center mt-1 mb-4">
+          Veuillez remplir les informations ci-dessous.
+        </p>
+
+        <div class="px-4">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <!-- Fullname -->
+            <div class="mb-3">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-control" formControlName="fullname" placeholder="Enter your full name">
+            </div>
+
+            <!-- Username -->
+            <div class="mb-3">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" formControlName="username" placeholder="Enter username">
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" formControlName="email" placeholder="Enter your email">
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+              <label class="form-label">Phone</label>
+              <input type="text" class="form-control" formControlName="phone" placeholder="Enter phone number">
+            </div>
+
+            <!-- Password (optional in edit) -->
+            <div class="mb-3" *ngIf="!isEditMode">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" formControlName="password" placeholder="Enter your password">
+            </div>
+
+            <!-- Role -->
+            <div class="mb-3">
+              <label class="form-label">Role</label>
+              <select class="form-control" formControlName="role">
+                <option value="0">Select role</option>
+
+                <option *ngFor="let role of roles" [value]="role.id">
+                  {{ role.name | titlecase }}
+                </option>
+
+              </select>
+            </div>
+
+            <!-- Submit -->
+            <div class="mb-1 text-center d-grid">
+
+              <button type="submit" [disabled]="loading">
+                <span *ngIf="!loading">{{ isEditMode ? 'Update' : 'Sign Up' }}</span>
+                <span *ngIf="loading">Loading...</span>
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

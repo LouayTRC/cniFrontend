@@ -24,6 +24,15 @@ export class LoginComponent {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
+    this.store.select(selectConnectedUser).subscribe(user => {
+      console.log("Connected user : ", user);
+    });
+
+     this.store.select(selectToken).subscribe(token => {
+      console.log("selectToken : ", token);
+    });
+
+
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],

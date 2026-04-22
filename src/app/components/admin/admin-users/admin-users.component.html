@@ -1,0 +1,129 @@
+<!-- LOADER GLOBAL -->
+<div *ngIf="loading" class="text-center my-3">
+    <div class="spinner-border text-primary"></div>
+    <div>Chargement...</div>
+</div>
+
+<div class="row h-100" *ngIf="!loading">
+
+    <div class="col-md-8">
+
+        <div class="card">
+            <div class="card-body d-flex flex-column gap-3">
+
+                <div class="d-flex flex-wrap justify-content-between gap-3">
+
+                    <div class="search-bar">
+                        <span><i class="bx bx-search-alt"></i></span>
+                        <input type="search" class="form-control" [(ngModel)]="userSearch"
+                            placeholder="Rechercher Utilisateur..." />
+                    </div>
+
+                    <a routerLink="/admin/add-user" class="btn btn-primary d-inline-flex align-items-center">
+                        <i class="bx bx-plus me-1"></i>Ajouter un utilisateur
+                    </a>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-centered">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nom complet</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Rôle</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let user of users; let i = index">
+
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ user.fullname }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+
+                                <td>
+                                    <span class="badge" [ngClass]="{
+                      'badge-soft-danger': user.role.name == 'ADMIN',
+                      'badge-soft-primary': user.role.name == 'RESPONSABLE',
+                      'badge-soft-success': user.role.name == 'OPERATEUR'
+                    }">
+                                        {{ user.role.name | titlecase }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <ng-container *ngIf="user.role.name != 'ADMIN'">
+                                        <button class="btn btn-sm btn-soft-secondary me-1"
+                                            (click)="goToUpdate(user.id)">
+                                            <i class="bx bx-edit"></i>
+                                        </button>
+
+                                        <!-- DELETE -->
+                                        <button class="btn btn-sm btn-soft-danger" (click)="openDeletePopup(user.id)"
+                                            [disabled]="deletingId === user.id">
+
+                                            <span *ngIf="deletingId === user.id"
+                                                class="spinner-border spinner-border-sm"></span>
+
+                                            <i *ngIf="deletingId !== user.id" class="bx bx-trash"></i>
+
+                                        </button>
+                                    </ng-container>
+
+
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ROLES -->
+    <div class="col-md-4 h-100">
+        <div class="card">
+            <div class="card-body d-flex flex-column gap-3 h-100">
+
+                <h5>Liste des Roles</h5>
+
+                <table class="table table-centered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nom</th>
+                            <th>Users</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let role of roles; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ role.name | titlecase }}</td>
+                            <td>{{ role.countUsers }}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ✅ POPUP -->
+<app-popup [visible]="showPopup" title="Suppression utilisateur"
+    message="Voulez-vous vraiment supprimer cet utilisateur ?" icon="bx bx-error-circle" type="danger"
+    (confirm)="confirmDelete()" (cancel)="closePopup()">
+</app-popup>

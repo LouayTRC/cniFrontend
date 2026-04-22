@@ -5,6 +5,7 @@ import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import * as AuthActions from './auth.actions';
 import { AuthService } from '../../app/services/auth.service';
 import { Router } from '@angular/router';
+import { UserRole } from '@/app/utils/enums';
 
 @Injectable()
 export class AuthEffects {
@@ -30,15 +31,24 @@ export class AuthEffects {
           localStorage.setItem('token', token);
           // Redirection based on role
           const role = user?.role?.name;
-          if (role === 'ADMIN') {
-            this.router.navigate(['/admin/dashboard']);
-          } else if (role === 'OPERATEUR') {
-            this.router.navigate(['/operateur/dashboard']);
-          } else if (role === 'RESPONSABLE') {
-            this.router.navigate(['/responsable/dashboard']);
+          if (role === UserRole.admin) {
+            this.router.navigate(['/admin']);
+          } else if (role === UserRole.operateur) {
+            this.router.navigate(['/operateur']);
           } else {
-            this.router.navigate(['/user/dashboard']);
+            this.router.navigate(['/responsable']);
           }
+        })
+      ),
+    { dispatch: false }
+  );
+
+refreshSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(AuthActions.refreshSuccess),
+        tap(({ token, user }) => {
+          localStorage.setItem('token', token);
         })
       ),
     { dispatch: false }

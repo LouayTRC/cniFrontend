@@ -22,27 +22,12 @@ export class AppComponent implements OnInit  {
   
 
   constructor() {
-    this.router.events.subscribe((event: Event) => {
-      this.checkRouteChange(event)
-    })
+   
   }
 
   ngOnInit(): void {
    
   }
 
-  checkRouteChange(routerEvent: Event) {
-    if (routerEvent instanceof NavigationStart) {
-      this.progressBar.start()
-    }
-    if (
-      routerEvent instanceof NavigationEnd ||
-      routerEvent instanceof NavigationCancel ||
-      routerEvent instanceof NavigationError
-    ) {
-      setTimeout(() => {
-        this.progressBar.complete()
-      }, 200)
-    }
-  }
+ 
 }

@@ -1,13 +1,53 @@
-import { Routes } from '@angular/router';
 
-import { inject } from '@angular/core';
+import { Routes } from '@angular/router';
 import { LoginComponent } from '@component/auth/login/login.component';
+import { DashboardComponent } from '@component/dashboard/dashboard.component';
+import { AuthGuard } from './guards/auth.guard';
+import { AdminUsersComponent } from '@component/admin/admin-users/admin-users.component';
+import { AddUserComponent } from '@component/admin/add-user/add-user.component';
 
 
 export const routes: Routes = [
   {
     path: 'login',
-    component:LoginComponent
+    component: LoginComponent
+  },
+  {
+    path: 'admin',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'users',
+        component: AdminUsersComponent,
+        data: { title: 'Gestion des utilisateurs' },
+      },
+      {
+        path: 'add-user',
+        component: AddUserComponent,
+        data: { title: 'Ajouter un utilisateur' },
+      },
+      {
+        path: 'edit-user/:id',
+        component: AddUserComponent,
+        data: { title: 'Modifier un utilisateur' },
+      },
+      {
+        path: '',
+        redirectTo: 'users',
+        pathMatch: "full"
+      }
+    ]
+  },
+  {
+    path: 'operateur',
+    component: DashboardComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'responsable',
+    component: DashboardComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: '',
