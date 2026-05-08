@@ -5,6 +5,7 @@ import { DashboardComponent } from '@component/dashboard/dashboard.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminUsersComponent } from '@component/admin/admin-users/admin-users.component';
 import { AddUserComponent } from '@component/admin/add-user/add-user.component';
+import { ChatComponent } from '@component/chat/chat.component';
 
 
 export const routes: Routes = [
@@ -33,6 +34,11 @@ export const routes: Routes = [
         data: { title: 'Modifier un utilisateur' },
       },
       {
+        path: 'chat',
+        component: ChatComponent,
+        data: { title: 'Messagerie' },
+      },
+      {
         path: '',
         redirectTo: 'users',
         pathMatch: "full"
@@ -42,12 +48,26 @@ export const routes: Routes = [
   {
     path: 'operateur',
     component: DashboardComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'chat',
+        component: ChatComponent,
+        data: { title: 'Messagerie' },
+      }
+    ]
   },
   {
     path: 'responsable',
     component: DashboardComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'chat',
+        component: ChatComponent,
+        data: { title: 'Messagerie' },
+      }
+    ]
   },
   {
     path: '',

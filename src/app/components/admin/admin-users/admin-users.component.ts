@@ -2,7 +2,7 @@ import { User } from '@/app/entities/user';
 import { RoleService } from '@/app/services/role.service';
 import { UserService } from '@/app/services/user.service';
 import { selectToken } from '@/store/auth';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { PopupComponent } from "@component/reusables/popup/popup.component";
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ChartOptions } from '@/app/utils/enums';
+import { combineLatest, switchMap } from 'rxjs';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class AdminUsersComponent {
   store = inject(Store);
   router = inject(Router);
   toastr = inject(ToastrService);
+  private titleCase = new TitleCasePipe();
 
   userSearch: string = "";
   token: string = "";
@@ -42,48 +44,66 @@ export class AdminUsersComponent {
 
 
   pieChart: Partial<ChartOptions> = {
-  chart: {
-    height: 320,
-    type: 'pie',
-  },
-  series: [44, 55, 41, 17, 15],
-  labels: ['Series 1', 'Series 2', 'Series 3', 'Series 4', 'Series 5'],
-  colors: ["#1e84c4", "#7f56da", "#ed5565", "#f9b931", "#1bb394"],
-  legend: {
-    show: true,
-    position: 'bottom',
-    horizontalAlign: 'center',
-    floating: false,
-    fontSize: '14px',
-    offsetX: 0,
-    offsetY: 7,
-  },
-  responsive: [
-    {
-      breakpoint: 600,
-      options: {
-        chart: {
-          height: 240,
-        },
-        legend: {
-          show: false,
+    chart: {
+      height: 320,
+      type: 'pie',
+    },
+    series: [],
+    labels: [],
+    colors: ["#1e84c4", "#7f56da", "#ed5565"],
+    legend: {
+      show: true,
+      position: 'bottom',
+      horizontalAlign: 'center',
+      floating: false,
+      fontSize: '14px',
+      offsetX: 0,
+      offsetY: 7,
+    },
+    responsive: [
+      {
+        breakpoint: 600,
+        options: {
+          chart: {
+            height: 240,
+          },
+          legend: {
+            show: false,
+          },
         },
       },
-    },
-  ],
-};
+    ],
+  };
 
   constructor(
     private userService: UserService,
     private roleService: RoleService
-  ) {}
+  ) { }
+
+
 
   ngOnInit(): void {
-    this.store.select(selectToken).subscribe(token => {
-      if (token) {
+    this.store.select(selectToken).pipe(
+      switchMap(token => {
+        if (!token) return [];
+
         this.token = token;
-        this.fetchUsers();
-        this.fetchRoles();
+
+        return combineLatest([
+          this.userService.getAllUsers(this.getHeaders()),
+          this.roleService.getAllRolesWithCountUser(this.getHeaders())
+        ]);
+      })
+    ).subscribe({
+      next: ([users, roles]: any) => {
+        this.users = users;
+        this.roles = roles;
+
+        const stats = this.prepareStats();
+        console.log("stats", stats); // ✅ maintenant fonctionne toujours
+      },
+      error: () => {
+        this.toastr.error("Erreur chargement données");
       }
     });
   }
@@ -92,29 +112,6 @@ export class AdminUsersComponent {
     return new HttpHeaders({ 'Authorization': `Bearer ${this.token}` });
   }
 
-  // ================= USERS =================
-  private fetchUsers(): void {
-    this.loading = true;
-
-    this.userService.getAllUsers(this.getHeaders()).subscribe({
-      next: (res: User[]) => {
-        this.users = res;
-        this.loading = false;
-      },
-      error: () => {
-        this.toastr.error("Erreur chargement utilisateurs");
-        this.loading = false;
-      }
-    });
-  }
-
-  // ================= ROLES =================
-  private fetchRoles(): void {
-    this.roleService.getAllRolesWithCountUser(this.getHeaders()).subscribe({
-      next: (res: any[]) => this.roles = res,
-      error: () => this.toastr.error("Erreur chargement rôles")
-    });
-  }
 
   goToUpdate(id: string) {
     this.router.navigate(['/admin/edit-user/' + id]);
@@ -162,5 +159,19 @@ export class AdminUsersComponent {
         this.toastr.error("Échec de suppression utilisateur", "Erreur");
       }
     });
+  }
+
+
+  prepareStats() {
+    let stats: any = {
+      totalUsers: this.users.length,
+      totalRoles: this.roles.length,
+      roles:this.roles.map(r=>({name:r.name,count:r.countUsers,pourcentage: this.users.length > 0 ? Math.round((r.countUsers / this.users.length) * 100) : 0}))
+    }
+    console.log("stats", stats);
+
+    this.pieChart.series = stats.roles.map((r: any) => r.count);
+    this.pieChart.labels = stats.roles.map((r: any) => this.titleCase.transform(r.name) );
+    return stats;
   }
 }

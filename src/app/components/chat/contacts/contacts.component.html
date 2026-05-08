@@ -1,0 +1,116 @@
+@if (contacts && connectedUser) {
+<div class="card position-relative overflow-hidden chatOffcanvas " style="height: 550px;" id="chatOffcanvas">
+  <div class="card-header border-0 d-flex justify-content-between align-items-center">
+    <h4 class="card-title">Chat</h4>
+  </div>
+
+  <div class="chat-search px-3">
+    <div class="chat-search-box">
+      <input class="form-control" type="text" name="search" placeholder="Search ..." [(ngModel)]="searchText"
+        (ngModelChange)="searchContact()" />
+      <button type="submit" class="btn btn-sm btn-link search-icon p-0">
+        <i class="bx bx-search-alt"></i>
+      </button>
+    </div>
+  </div>
+
+  <ul ngbNav #nav="ngbNav" class="nav nav-tabs nav-justified nav-bordered border-top mt-2">
+    <li ngbNavItem class="nav-item">
+      <a ngbNavLink data-bs-toggle="tab" aria-expanded="false" class="nav-link py-2">
+        Chat
+      </a>
+      <ng-template ngbNavContent>
+        <div class="tab-pane show active" id="chat-list">
+          <ngx-simplebar class="px-3 mb-3 chat-setting-height" data-simplebar>
+            @for (discu of filtredDiscussions; track $index) {
+            <a (click)="selectContact(discu.participants[0]==connectedUser.id ? discu.participants[1] : discu.participants[0])"  class="text-body">
+              <div class="d-flex align-items-center p-2 chat-item">
+                <div class="flex-shrink-0 position-relative">
+                  <img src="assets/images/new.png" class="me-2 rounded-circle" height="36" alt="avatar-2" />
+                </div>
+                <div class="flex-grow-1 overflow-hidden">
+                  <h5 class="my-0">
+                    <span class="float-end text-muted fs-13">{{
+                      discu.time
+                      }}</span>
+                    {{ getUser(discu).fullname}}
+                  </h5>
+                  <p class="mt-1 mb-0 fs-13 text-muted d-flex align-items-end justify-content-between">
+                    @if (discu.lastMessage.senderId==connectedUser.id) {
+                    <span class="w-75">vous : {{ discu.lastMessage.content }}</span>
+                    }
+                    @else {
+                    <span class="w-75">{{ discu.lastMessage.content }}</span>
+
+                    }
+                  </p>
+                </div>
+              </div>
+            </a>
+            }
+          </ngx-simplebar>
+        </div>
+      </ng-template>
+    </li>
+    <li ngbNavItem class="nav-item">
+      <a ngbNavLink data-bs-toggle="tab" aria-expanded="true" class="nav-link py-2">
+        Contacts
+      </a>
+      <ng-template ngbNavContent>
+        <div class="tab-pane" id="contact-list">
+          <ngx-simplebar class="px-3 mb-3 chat-setting-height" data-simplebar>
+            @if (filtredContacts && filtredContacts.length>0) {
+            @for (c of filtredContacts; track $index) {
+            <div class="chat-item d-flex align-items-center position-relative py-2">
+              <a (click)="selectContact(c.id)" class="stretched-link"><img src="assets/images/new.png"
+                  class="me-2 rounded-circle" height="36" alt="avatar-2" /></a>
+              <div class="flex-grow-1">
+                <h5 class="my-0 fs-14">
+                  {{ c.fullname | titlecase}}
+                </h5>
+                <!-- <p class="mt-1 mb-0 text-muted">
+                  @if (c.role==rolesEnum.eleve) {
+                  @if (c.eleve && c.eleve.inscriptions) {
+                  <span class="w-75">{{c.eleve.inscriptions[0].niveauScolaire.niveau | niveauScolaire}}
+                    {{c.eleve.inscriptions[0].niveauScolaire.section}}
+                    {{c.eleve.inscriptions[0].classe?.numeroClasse}}</span>
+                  }
+                  }
+                  @if (c.role==rolesEnum.enseignant) {
+                  @if (c.enseignant && c.enseignant.matiere) {
+                  <span class="w-75">{{c.enseignant.matiere.nom | titlecase }}</span>
+                  }
+                  }
+
+                  @if (c.role==rolesEnum.surveillant) {
+                  <span class="w-75">{{rolesEnum.surveillant | titlecase }}</span>
+                  }
+
+                  @if (c.role==rolesEnum.parent) {
+                  <span class="w-75">
+                    @for (e of c.parent?.eleveParents; track $index) {
+                      {{e.eleve.utilisateur.fullname}}
+                      @if ($index!=c.parent!.eleveParents.length-1) {-}
+                    }
+                  </span>
+                  }
+
+
+                </p> -->
+              </div>
+            </div>
+            }
+            }
+            @else {
+            <p class="text-center">Pas de contacts pour le moment...</p>
+            }
+
+          </ngx-simplebar>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+
+  <div class="tab-content" [ngbNavOutlet]="nav"></div>
+</div>
+}

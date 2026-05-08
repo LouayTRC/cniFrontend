@@ -1,5 +1,5 @@
 import { findAllParent } from '@/app/utils/functions';
-import { ADMIN_MENU, MenuItem, RESPONSABLE_MENU } from '@/app/utils/sidebarMenus';
+import { ADMIN_MENU, MenuItem, OPERATEUR_MENU, RESPONSABLE_MENU } from '@/app/utils/sidebarMenus';
 import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, Input } from '@angular/core';
 import { NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
@@ -33,6 +33,9 @@ export class SideBarComponent {
     }
     else if (this.role === UserRole.responsable) {
       this.menuItems = RESPONSABLE_MENU;
+    }
+    else if (this.role === UserRole.operateur) {
+      this.menuItems = OPERATEUR_MENU;
     }
   }
 

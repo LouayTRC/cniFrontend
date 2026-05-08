@@ -1,0 +1,151 @@
+<div class="card position-relative overflow-hidden d-flex flex-column justify-content-between" style="height: 550px;" id="chatArea">
+  <div class="card-header d-flex align-items-center mh-100">
+    <!-- <button
+      class="btn btn-light d-xxl-none d-flex align-items-center px-2 me-2"
+      type="button"
+      (click)="openContactMenu()"
+      data-bs-target="#Contactoffcanvas"
+      aria-controls="Contactoffcanvas"
+    >
+      <i class="bx bx-menu fs-18"></i>
+    </button> -->
+
+    <div class="d-flex align-items-center">
+
+      <img src="assets/images/new.png" class="me-2 rounded" height="36" alt="avatar-4" />
+      <div class="d-none d-md-flex flex-column">
+        <h5 class="my-0 fs-16 fw-semibold">
+          <!-- <a
+            (click)="openProfile()"
+            href="javascript:void(0);"
+            class="text-dark"
+          >
+            {{ profileDetail.name }}
+          </a> -->
+          <a  class="text-dark" [routerLink]="['../profile/',contact.id]">
+            {{ contact.fullname }}
+          </a>
+        </h5>
+        <!-- <p class="mb-0 text-success fw-semibold fst-italic">typing...</p> -->
+      </div>
+    </div>
+
+    <div class="flex-grow-1">
+      <ul class="list-inline float-end d-flex gap-3 mb-0">
+        <li class="list-inline-item fs-20 dropdown">
+          <!-- <a
+            href="javascript: void(0);"
+            class="text-dark"
+            (click)="open(videocall)"
+          >
+            <i class="bx bx-video"></i>
+          </a> -->
+        </li>
+
+        <li class="list-inline-item fs-20 dropdown">
+          <!-- <a
+            href="javascript: void(0);"
+            class="text-dark"
+            (click)="open(voicecall)"
+          >
+            <i class="bx bx-phone-call"></i>
+          </a> -->
+        </li>
+
+        <!-- <li class="list-inline-item fs-20 dropdown">
+          <a [routerLink]="['../eleve/',contact.id]" class="text-dark">
+            <i class="bx bx-user"></i>
+          </a>
+        </li> -->
+
+        <!-- <li
+          ngbDropdown
+          class="list-inline-item fs-20 dropdown d-none d-md-flex"
+        >
+          <a
+            ngbDropdownToggle
+            href="javascript:void(0);"
+            class="dropdown-toggle arrow-none text-dark"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </a>
+          <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end">
+            <a class="dropdown-item" href="javascript: void(0);"
+              ><i class="bx bx-user-circle me-2"></i>View Profile</a
+            >
+            <a class="dropdown-item" href="javascript: void(0);"
+              ><i class="bx bx-music me-2"></i>Media, Links and Docs</a
+            >
+            <a class="dropdown-item" href="javascript: void(0);"
+              ><i class="bx bx-search me-2"></i>Search</a
+            >
+            <a class="dropdown-item" href="javascript: void(0);"
+              ><i class="bx bx-image me-2"></i>Wallpaper</a
+            >
+            <a class="dropdown-item" href="javascript: void(0);"
+              ><i class="bx bx-right-arrow-circle me-2"></i>More</a
+            >
+          </div>
+        </li> -->
+      </ul>
+    </div>
+  </div>
+
+  <div class="chat-box">
+    <ngx-simplebar class="chat-conversation-list p-3 chatbox-height" #scrollRef>
+      @for (chat of messages; track $index) {
+      <li class="clearfix odd" [ngClass]="{ odd: chat.senderId==connectedUser.id }">
+
+        <div class="chat-conversation-text mb-0" [ngClass]="{ 'ms-0': chat.senderId==connectedUser.id }">
+          @if (chat.senderId==connectedUser.id) {
+          <div class="d-flex justify-content-end">
+            <div class="chat-ctext-wrap" [ngClass]="{ 'text-start': chat.senderId==connectedUser.id }">
+
+              <p>{{ chat.content }}</p>
+
+            </div>
+          </div>
+          }
+          @else {
+          <div class="d-flex">
+            <div class="chat-ctext-wrap ms-2">
+              <p>{{ chat.content }}</p>
+            </div>
+          </div>
+          }
+          <p class="text-muted fs-12 mb-0 mt-1" [ngClass]="{ 'ms-2':  chat.senderId!=connectedUser.id  }">
+            @if (chat.timestamp && messages.length - 1 === $index) {
+            {{ convertDate(chat.timestamp) | date:'HH:mm' }}
+            }
+          </p>
+        </div>
+      </li>
+      }
+
+    </ngx-simplebar>
+
+    <div class="bg-light bg-opacity-50 p-2">
+      <div class="needs-validation" name="chat-form" id="chat-form">
+        <div class="row align-items-center">
+          <div class="col mb-2 mb-sm-0 d-flex">
+            <div class="input-group">
+              <input type="text" class="form-control border-0" (keydown.enter)="sendMessage()" [(ngModel)]="message"
+                placeholder="Enter your message" />
+            </div>
+          </div>
+          <div class="col-sm-auto">
+            <div class="">
+              <div class="btn-group btn-toolbar">
+                <button type="button" (click)="sendMessage()" class="btn btn-sm btn-primary chat-send">
+                  <i class="bx bx-send fs-18"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

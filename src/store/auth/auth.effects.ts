@@ -9,7 +9,7 @@ import { UserRole } from '@/app/utils/enums';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions$: Actions, private authService: AuthService, private router: Router) {}
+  constructor(private actions$: Actions, private authService: AuthService, private router: Router) { }
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -43,7 +43,7 @@ export class AuthEffects {
     { dispatch: false }
   );
 
-refreshSuccess$ = createEffect(
+  refreshSuccess$ = createEffect(
     () =>
       this.actions$.pipe(
         ofType(AuthActions.refreshSuccess),
@@ -54,15 +54,23 @@ refreshSuccess$ = createEffect(
     { dispatch: false }
   );
 
-  logout$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(AuthActions.logout),
-        tap(() => {
-          localStorage.removeItem('token');
-          this.router.navigate(['/login']);
-        })
-      ),
+  logout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.logout),
+      tap(() => {
+        localStorage.removeItem('token');
+      }),
+      map(() => AuthActions.logoutSuccess())
+    )
+  );
+
+  logoutSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActions.logoutSuccess),
+      tap(() => {
+        this.router.navigate(['/login']);
+      })
+    ),
     { dispatch: false }
   );
 }

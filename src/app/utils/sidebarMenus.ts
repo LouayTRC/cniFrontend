@@ -22,11 +22,12 @@ export const ADMIN_MENU: MenuItem[] = [
     isTitle: true,
   },
   {
-    key: 'apps-chat',
+    key: 'admin-users',
     icon: 'humbleicons:users',
     label: 'Gestion des Utilisateurs',
     link: '/admin/users',
   },
+  
 ]
 
 export const RESPONSABLE_MENU: MenuItem[] = [
@@ -37,10 +38,32 @@ export const RESPONSABLE_MENU: MenuItem[] = [
   },
   {
     key: 'apps-chat',
+    icon: 'solar:chat-round-call-broken',
+    label: 'Chat',
+    link: '/responsable/chat',
+  },
+  {
+    key: 'apps-dossiers',
     icon: 'solar:letter-broken',
     label: 'Gestion des Dossiers',
     link: '/responsable/dossiers',
   },
+]
+
+
+
+export const OPERATEUR_MENU: MenuItem[] = [
+  {
+    key: 'general',
+    label: 'MENU',
+    isTitle: true,
+  },
+  {
+    key: 'apps-chat',
+    icon: 'solar:chat-round-call-broken',
+    label: 'Chat',
+    link: '/operateur/chat',
+  }
 ]
 
 export const MENU: MenuItem[] = [

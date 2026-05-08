@@ -1,6 +1,9 @@
+import { NotificationService } from '@/app/services/notification.service';
 import { UserRole } from '@/app/utils/enums';
+import { selectConnectedUser } from '@/store/auth';
 import { changeSidebarSize } from '@/store/layout/layout-action';
 import { getSidebarSize } from '@/store/layout/layout-selector';
+import { loadNotificationsFailure, loadNotificationsSucces } from '@/store/notifications/notifications-actions';
 import { Component, HostListener, inject, Renderer2 } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { SideBarComponent } from '@component/reusables/side-bar/side-bar.component';
@@ -19,9 +22,10 @@ export class DashboardComponent {
   role!: string;
 
   store = inject(Store);
+
   private renderer = inject(Renderer2);
 
-  constructor(private active: ActivatedRoute) {}
+  constructor(private active: ActivatedRoute, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
 
@@ -47,6 +51,14 @@ export class DashboardComponent {
     if (document.documentElement.clientWidth <= 1140) {
       this.onResize();
     }
+
+    this.store.select(selectConnectedUser).subscribe(res => {
+      if (res) {
+        this.notificationService.listenToNotifications(res.id).subscribe(notifications => {
+          this.store.dispatch(loadNotificationsSucces({ notifications }));
+        });
+      }
+    });
   }
 
   @HostListener('window:resize')

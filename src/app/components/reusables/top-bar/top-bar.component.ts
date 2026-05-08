@@ -1,7 +1,9 @@
+import { Notification } from '@/app/entities/notification';
 import { User } from '@/app/entities/user';
 import { logout, selectConnectedUser } from '@/store/auth';
 import { changeTheme } from '@/store/layout/layout-action';
 import { getLayoutColor } from '@/store/layout/layout-selector';
+import { getNotifications } from '@/store/notifications/notifications-selectors';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, inject, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgbDropdownModule, NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
@@ -20,10 +22,17 @@ export class TopBarComponent {
 
   store = inject(Store);
   user!: User;
-  
+  notifications!: Notification[];
+
   ngOnInit(): void {
     this.store.select(selectConnectedUser).subscribe(user => {
-      if (user) this.user = user;
+      if (user) {
+        this.user = user;
+        this.store.select(getNotifications).subscribe((notifications: Notification[]) => {
+          this.notifications = notifications;
+          
+        });
+      }
     });
   }
 
