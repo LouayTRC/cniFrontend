@@ -50,3 +50,7 @@ export enum UserRole {
     responsable = 'RESPONSABLE',
     operateur = 'OPERATEUR'
 }
+
+export enum ReclamationType {
+
+}

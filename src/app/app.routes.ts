@@ -6,6 +6,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { AdminUsersComponent } from '@component/admin/admin-users/admin-users.component';
 import { AddUserComponent } from '@component/admin/add-user/add-user.component';
 import { ChatComponent } from '@component/chat/chat.component';
+import { OperateurReclamationsComponent } from '@component/operateur/operateur-reclamations/operateur-reclamations.component';
+import { AddReclamationComponent } from '@component/operateur/add-recalamation/add-recalamation.component';
 
 
 export const routes: Routes = [
@@ -51,6 +53,24 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: 'reclamations',
+        component: OperateurReclamationsComponent,
+        data: { title: 'Réclamations' },
+        
+      },
+      {
+        path: 'reclamations/add',
+        component: AddReclamationComponent,
+        data: { title: 'Ajouter Reclamation' },
+        
+      },
+      {
+        path: 'reclamations/edit/:id',
+        component: AddReclamationComponent,
+        data: { title: 'Modifier Reclamation' },
+        
+      },
+      {
         path: 'chat',
         component: ChatComponent,
         data: { title: 'Messagerie' },
@@ -62,6 +82,7 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [AuthGuard],
     children: [
+      
       {
         path: 'chat',
         component: ChatComponent,

@@ -59,6 +59,12 @@ export const OPERATEUR_MENU: MenuItem[] = [
     isTitle: true,
   },
   {
+    key: 'apps-reclamations',
+    icon: 'solar:chat-round-call-broken',
+    label: 'Réclamations',
+    link: '/operateur/reclamations',
+  },
+  {
     key: 'apps-chat',
     icon: 'solar:chat-round-call-broken',
     label: 'Chat',

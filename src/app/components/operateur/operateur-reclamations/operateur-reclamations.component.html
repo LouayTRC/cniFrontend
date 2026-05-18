@@ -1,0 +1,215 @@
+<!-- LOADER GLOBAL -->
+<div *ngIf="loading" class="text-center my-3">
+    <div class="spinner-border text-primary"></div>
+    <div>Chargement...</div>
+</div>
+
+<div class="row h-100 px-2 py-3" *ngIf="!loading">
+
+    <div class="col-12">
+
+        <div class="card mb-0">
+            <div class="card-body d-flex flex-column gap-3">
+
+                <!-- HEADER -->
+                <div class="d-flex flex-wrap justify-content-between gap-3">
+
+                    <div class="search-bar">
+                        <span><i class="bx bx-search-alt"></i></span>
+
+                        <input
+                            type="search"
+                            class="form-control"
+                            [(ngModel)]="searchText"
+                            placeholder="Rechercher une réclamation..."
+                        />
+                    </div>
+
+                    <a
+                        routerLink="/operateur/reclamations/add"
+                        class="btn btn-primary d-inline-flex align-items-center"
+                    >
+                        <i class="bx bx-plus me-1"></i>
+                        Ajouter une réclamation
+                    </a>
+
+                </div>
+
+                <!-- TABLE -->
+                <div class="table-responsive">
+
+                    <table class="table table-centered">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Titre</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Priorité</th>
+                                <th>Statut</th>
+                                <th>Fichiers</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr
+                                *ngFor="
+                                    let reclamation of filteredReclamations;
+                                    let i = index
+                                "
+                            >
+
+                                <td>{{ i + 1 }}</td>
+
+                                <!-- TITLE -->
+                                <td>
+                                    {{ reclamation.title }}
+                                </td>
+
+                                <!-- DESCRIPTION -->
+                                <td
+                                    style="
+                                        max-width: 250px;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                    "
+                                >
+                                    {{ reclamation.description }}
+                                </td>
+
+                                <!-- DATE -->
+                                <td>
+                                    {{
+                                        reclamation.createdAt
+                                            | date : 'dd/MM/yyyy HH:mm'
+                                    }}
+                                </td>
+
+                                <!-- PRIORITY -->
+                                <td>
+
+                                    <span
+                                        class="badge"
+                                        [ngClass]="(reclamation.priority | priority).badgeClass"
+                                    >
+                                        {{ (reclamation.priority | priority).text }}
+                                    </span>
+
+                                </td>
+
+                                <!-- STATUS -->
+                                <td>
+
+                                    <span
+                                        class="badge"
+                                        [ngClass]="(reclamation.status | status).badgeClass"
+                                    >
+                                        {{ (reclamation.status | status).text }}
+                                    </span>
+
+                                </td>
+
+
+                                
+
+                                <!-- Files -->
+                                <td>
+                                    <button
+                                        class="btn btn-sm btn-soft-primary"
+                                        (click)="downloadFiles(reclamation.id)"
+                                    >
+                                        <i class="bx bx-download"></i>
+                                    </button>
+                                </td>
+
+                                <!-- ACTIONS -->
+                                <td>
+
+
+                                    <button
+                                        class="btn btn-sm btn-soft-secondary me-1"
+                                        (click)="goToUpdate(reclamation.id)"
+                                    >
+                                        <i class="bx bx-edit"></i>
+                                    </button>
+
+                                    <button
+                                        class="btn btn-sm btn-soft-danger"
+                                        (click)="openDeletePopup(reclamation.id)"
+                                        [disabled]="
+                                            deletingId === reclamation.id
+                                        "
+                                    >
+
+                                        <span
+                                            *ngIf="
+                                                deletingId === reclamation.id
+                                            "
+                                            class="
+                                                spinner-border
+                                                spinner-border-sm
+                                            "
+                                        >
+                                        </span>
+
+                                        <i
+                                            *ngIf="
+                                                deletingId !== reclamation.id
+                                            "
+                                            class="bx bx-trash"
+                                        >
+                                        </i>
+
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                            <!-- EMPTY -->
+                            <tr
+                                *ngIf="
+                                    filteredReclamations &&
+                                    filteredReclamations.length == 0
+                                "
+                            >
+
+                                <td
+                                    colspan="8"
+                                    class="text-center text-muted py-4"
+                                >
+
+                                    Aucune réclamation trouvée
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- DELETE POPUP -->
+<app-popup
+    [visible]="showPopup"
+    title="Suppression réclamation"
+    message="Voulez-vous vraiment supprimer cette réclamation ?"
+    icon="bx bx-error-circle"
+    type="danger"
+    (confirm)="confirmDelete()"
+    (cancel)="closePopup()"
+>
+</app-popup>

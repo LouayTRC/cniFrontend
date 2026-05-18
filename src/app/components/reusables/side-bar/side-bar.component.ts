@@ -28,6 +28,8 @@ export class SideBarComponent {
   @Input() role!: string;
 
   ngOnInit(): void {
+    console.log("role",this.role);
+    
     if (this.role === UserRole.admin) {
       this.menuItems = ADMIN_MENU;
     }

@@ -1,0 +1,177 @@
+<div class="row justify-content-center">
+
+  <div class="col-xl-6">
+
+    <div class="card auth-card">
+
+      <div class="card-body px-3 py-5">
+
+        <!-- Title -->
+        <h2 class="fw-bold text-center fs-18">
+          {{ isEditMode ? 'Update Reclamation' : 'Create Reclamation' }}
+        </h2>
+
+        <p class="text-muted text-center mt-1 mb-4">
+          Veuillez remplir les informations ci-dessous.
+        </p>
+
+        <div class="px-4">
+
+          <form
+            [formGroup]="reclamationForm"
+            (ngSubmit)="onSubmit()"
+          >
+
+            <!-- Title -->
+            <div class="mb-3">
+
+              <label class="form-label">
+                Title
+              </label>
+
+              <input
+                type="text"
+                class="form-control"
+                formControlName="title"
+                placeholder="Enter title"
+              >
+
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+
+              <label class="form-label">
+                Description
+              </label>
+
+              <textarea
+                rows="5"
+                class="form-control"
+                formControlName="description"
+                placeholder="Enter description"
+              ></textarea>
+
+            </div>
+
+            <!-- Priority -->
+            <div class="mb-3">
+
+              <label class="form-label">
+                Priority
+              </label>
+
+              <select
+                class="form-control"
+                formControlName="priority"
+              >
+
+                <option [value]="1">
+                  Low
+                </option>
+
+                <option [value]="2">
+                  Medium
+                </option>
+
+                <option [value]="3">
+                  High
+                </option>
+
+              </select>
+
+            </div>
+
+            <!-- Status -->
+            <div class="mb-3">
+
+              <label class="form-label">
+                Status
+              </label>
+
+              <select
+                class="form-control"
+                formControlName="status"
+              >
+
+                <option [value]="0">
+                  Pending
+                </option>
+
+                <option [value]="1">
+                  In Progress
+                </option>
+
+                <option [value]="2">
+                  Resolved
+                </option>
+
+              </select>
+
+            </div>
+
+            <!-- Files -->
+            <div class="mb-3">
+
+              <label class="form-label">
+                Files
+              </label>
+
+              <input
+                type="file"
+                class="form-control"
+                multiple
+                (change)="onFilesSelected($event)"
+              >
+
+            </div>
+
+            <!-- Preview -->
+            <div
+              class="mb-3"
+              *ngIf="selectedFiles.length > 0"
+            >
+
+              <div
+                *ngFor="let file of selectedFiles"
+                class="border rounded p-2 mb-2"
+              >
+
+                {{ file.name }}
+
+              </div>
+
+            </div>
+
+            <!-- Submit -->
+            <div class="mb-1 text-center d-grid">
+
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="loading"
+              >
+
+                <span *ngIf="!loading">
+                  {{ isEditMode ? 'Update' : 'Create' }}
+                </span>
+
+                <span *ngIf="loading">
+                  Loading...
+                </span>
+
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
