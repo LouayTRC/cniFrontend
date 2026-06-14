@@ -21,6 +21,7 @@
                             type="search"
                             class="form-control"
                             [(ngModel)]="searchText"
+                            (input)="searchReclamation()"
                             placeholder="Rechercher une réclamation..."
                         />
                     </div>
@@ -46,8 +47,11 @@
                                 <th>Titre</th>
                                 <th>Description</th>
                                 <th>Date</th>
+
+                                <th>Catégorie</th>
                                 <th>Priorité</th>
                                 <th>Statut</th>
+
                                 <th>Fichiers</th>
                                 <th>Actions</th>
                             </tr>
@@ -55,68 +59,47 @@
 
                         <tbody>
 
-                            <tr
-                                *ngFor="
-                                    let reclamation of filteredReclamations;
-                                    let i = index
-                                "
-                            >
+                            <tr *ngFor="let reclamation of filteredReclamations; let i = index">
 
                                 <td>{{ i + 1 }}</td>
 
                                 <!-- TITLE -->
-                                <td>
-                                    {{ reclamation.title }}
-                                </td>
+                                <td>{{ reclamation.title }}</td>
 
                                 <!-- DESCRIPTION -->
-                                <td
-                                    style="
-                                        max-width: 250px;
-                                        white-space: nowrap;
-                                        overflow: hidden;
-                                        text-overflow: ellipsis;
-                                    "
-                                >
+                                <td >
                                     {{ reclamation.description }}
                                 </td>
 
                                 <!-- DATE -->
                                 <td>
-                                    {{
-                                        reclamation.createdAt
-                                            | date : 'dd/MM/yyyy HH:mm'
-                                    }}
+                                    {{ reclamation.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                                </td>
+
+                                <!-- CATEGORY -->
+                                <td>
+                                    <span class="badge bg-dark">
+                                        {{ reclamation.category || 'N/A' }}
+                                    </span>
                                 </td>
 
                                 <!-- PRIORITY -->
                                 <td>
-
-                                    <span
-                                        class="badge"
-                                        [ngClass]="(reclamation.priority | priority).badgeClass"
-                                    >
-                                        {{ (reclamation.priority | priority).text }}
+                                    <span class="badge"
+                                        [ngClass]="(reclamation.priority | priority)?.badgeClass">
+                                        {{ (reclamation.priority | priority)?.text }}
                                     </span>
-
                                 </td>
 
                                 <!-- STATUS -->
                                 <td>
-
-                                    <span
-                                        class="badge"
-                                        [ngClass]="(reclamation.status | status).badgeClass"
-                                    >
-                                        {{ (reclamation.status | status).text }}
+                                    <span class="badge"
+                                        [ngClass]="(reclamation.status | status)?.badgeClass">
+                                        {{ (reclamation.status | status)?.text }}
                                     </span>
-
                                 </td>
 
-
-                                
-
-                                <!-- Files -->
+                                <!-- FILES -->
                                 <td>
                                     <button
                                         class="btn btn-sm btn-soft-primary"
@@ -129,7 +112,6 @@
                                 <!-- ACTIONS -->
                                 <td>
 
-
                                     <button
                                         class="btn btn-sm btn-soft-secondary me-1"
                                         (click)="goToUpdate(reclamation.id)"
@@ -140,28 +122,15 @@
                                     <button
                                         class="btn btn-sm btn-soft-danger"
                                         (click)="openDeletePopup(reclamation.id)"
-                                        [disabled]="
-                                            deletingId === reclamation.id
-                                        "
+                                        [disabled]="deletingId === reclamation.id"
                                     >
 
-                                        <span
-                                            *ngIf="
-                                                deletingId === reclamation.id
-                                            "
-                                            class="
-                                                spinner-border
-                                                spinner-border-sm
-                                            "
-                                        >
+                                        <span *ngIf="deletingId === reclamation.id"
+                                              class="spinner-border spinner-border-sm">
                                         </span>
 
-                                        <i
-                                            *ngIf="
-                                                deletingId !== reclamation.id
-                                            "
-                                            class="bx bx-trash"
-                                        >
+                                        <i *ngIf="deletingId !== reclamation.id"
+                                           class="bx bx-trash">
                                         </i>
 
                                     </button>
@@ -171,22 +140,10 @@
                             </tr>
 
                             <!-- EMPTY -->
-                            <tr
-                                *ngIf="
-                                    filteredReclamations &&
-                                    filteredReclamations.length == 0
-                                "
-                            >
-
-                                <td
-                                    colspan="8"
-                                    class="text-center text-muted py-4"
-                                >
-
+                            <tr *ngIf="filteredReclamations?.length === 0">
+                                <td colspan="9" class="text-center text-muted py-4">
                                     Aucune réclamation trouvée
-
                                 </td>
-
                             </tr>
 
                         </tbody>

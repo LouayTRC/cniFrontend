@@ -8,6 +8,7 @@ import { AddUserComponent } from '@component/admin/add-user/add-user.component';
 import { ChatComponent } from '@component/chat/chat.component';
 import { OperateurReclamationsComponent } from '@component/operateur/operateur-reclamations/operateur-reclamations.component';
 import { AddReclamationComponent } from '@component/operateur/add-recalamation/add-recalamation.component';
+import { ChatbotComponent } from '@component/operateur/chatbot/chatbot.component';
 
 
 export const routes: Routes = [
@@ -74,6 +75,11 @@ export const routes: Routes = [
         path: 'chat',
         component: ChatComponent,
         data: { title: 'Messagerie' },
+      },
+      {
+        path: 'chatbot',
+        component: ChatbotComponent,
+        data: { title: 'Chatbot' },
       }
     ]
   },

@@ -2,7 +2,7 @@ import { ReclamationService } from '@/app/services/reclamation.service';
 import { selectToken } from '@/store/auth';
 import { CommonModule } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -11,11 +11,11 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-add-recalamation',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './add-recalamation.component.html',
   styleUrl: './add-recalamation.component.scss'
 })
-export class AddReclamationComponent {
+export class AddReclamationComponent implements OnInit {
 
   httpHeaders!: HttpHeaders;
 
@@ -36,8 +36,9 @@ export class AddReclamationComponent {
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
+  // ================= INIT =================
   ngOnInit(): void {
 
     this.initForm();
@@ -47,11 +48,9 @@ export class AddReclamationComponent {
       if (token) {
 
         this.httpHeaders = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`
         });
 
-        // edit mode
         this.reclamationId = this.route.snapshot.paramMap.get('id')!;
 
         if (this.reclamationId) {
@@ -62,17 +61,17 @@ export class AddReclamationComponent {
     });
   }
 
+  // ================= FORM =================
   initForm() {
 
     this.reclamationForm = this.fb.group({
       title: ['', Validators.required],
-      description: ['', Validators.required],
-      priority: [1, Validators.required],
-      status: [0, Validators.required]
+      description: ['', Validators.required]
     });
 
   }
 
+  // ================= LOAD (EDIT MODE) =================
   loadReclamation() {
 
     this.reclamationService.getById(
@@ -84,60 +83,52 @@ export class AddReclamationComponent {
 
         this.reclamationForm.patchValue({
           title: data.title,
-          description: data.description,
-          priority: data.priority,
-          status: data.status
+          description: data.description
         });
 
       },
 
       error: (err) => {
         console.error(err);
+        this.toastr.error('Failed to load reclamation');
       }
 
     });
 
   }
 
+  // ================= FILES =================
   onFilesSelected(event: any) {
 
     if (event.target.files) {
-
       this.selectedFiles = Array.from(event.target.files);
-
     }
 
   }
 
+  // ================= SUBMIT =================
   onSubmit() {
 
     if (this.reclamationForm.invalid) return;
 
     this.loading = true;
 
-    const values = this.reclamationForm.value;
-
-    const reclamation = {
-      title: values.title,
-      description: values.description,
-      priority: values.priority,
-      status: values.status
+    // ONLY ML INPUT
+    const payload = {
+      title: this.reclamationForm.value.title,
+      description: this.reclamationForm.value.description
     };
 
     const formData = new FormData();
 
-    // IMPORTANT:
     // backend expects "reclamation"
     formData.append(
       'reclamation',
-      new Blob(
-        [JSON.stringify(reclamation)],
-        { type: 'application/json' }
-      )
+      new Blob([JSON.stringify(payload)], { type: 'application/json' })
     );
 
-    // append files
-    this.selectedFiles.forEach((file) => {
+    // files
+    this.selectedFiles.forEach(file => {
       formData.append('files', file);
     });
 
@@ -195,10 +186,7 @@ export class AddReclamationComponent {
             'Success'
           );
 
-          this.reclamationForm.reset({
-            priority: 1,
-            status: 0
-          });
+          this.reclamationForm.reset();
 
           this.selectedFiles = [];
 
@@ -220,5 +208,4 @@ export class AddReclamationComponent {
     }
 
   }
-
 }

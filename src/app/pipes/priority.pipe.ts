@@ -11,23 +11,50 @@ export interface PriorityInfo {
 })
 export class PriorityPipe implements PipeTransform {
 
-  transform(priority: number): PriorityInfo {
-    switch (priority) {
-      case 1:
+  transform(priority: string | number | null | undefined): PriorityInfo {
+
+    if (!priority) {
+      return {
+        text: 'Inconnu',
+        badgeClass: 'badge-soft-secondary'
+      };
+    }
+
+    const p = String(priority).toUpperCase();
+
+    switch (p) {
+
+      case 'LOW':
+      case 'FAIBLE':
+      case '1':
         return {
           text: 'Faible',
           badgeClass: 'badge-soft-success'
         };
-      case 2:
+
+      case 'MEDIUM':
+      case 'MOYENNE':
+      case '2':
         return {
           text: 'Moyenne',
           badgeClass: 'badge-soft-warning'
         };
-      case 3:
+
+      case 'HIGH':
+      case 'ÉLEVÉE':
+      case 'ELEVEE':
+      case '3':
         return {
           text: 'Élevée',
           badgeClass: 'badge-soft-danger'
         };
+
+      case 'URGENT':
+        return {
+          text: 'Urgente',
+          badgeClass: 'badge-soft-dark'
+        };
+
       default:
         return {
           text: 'Inconnu',
@@ -35,5 +62,4 @@ export class PriorityPipe implements PipeTransform {
         };
     }
   }
-
 }

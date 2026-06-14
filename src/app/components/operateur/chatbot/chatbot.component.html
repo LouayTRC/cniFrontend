@@ -1,0 +1,63 @@
+<div class="container py-4">
+
+  <!-- Chat Card -->
+  <div class="card shadow-sm" style="height: 80vh;">
+
+    <!-- Header -->
+    <div class="card-header bg-primary text-white">
+      <strong>AI Chatbot</strong>
+    </div>
+
+    <!-- Messages -->
+    <div class="card-body overflow-auto d-flex flex-column gap-2"
+         style="background-color: #f8f9fa;">
+
+      <div *ngFor="let msg of messages"
+           class="d-flex"
+           [ngClass]="msg.role === 'user' ? 'justify-content-end' : 'justify-content-start'">
+
+        <div
+          class="p-2 rounded shadow-sm"
+          [ngClass]="msg.role === 'user'
+            ? 'bg-primary text-white'
+            : 'bg-light border'">
+
+          {{ msg.text }}
+        </div>
+
+      </div>
+
+      <!-- Typing indicator -->
+      <div *ngIf="loading" class="text-muted small">
+        AI is typing...
+      </div>
+
+    </div>
+
+    <!-- Input -->
+    <div class="card-footer bg-white">
+
+      <div class="input-group">
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Type your message..."
+          [(ngModel)]="inputText"
+          (keyup.enter)="sendMessage()"
+        />
+
+        <button
+          class="btn btn-primary"
+          (click)="sendMessage()"
+          [disabled]="loading || !inputText.trim()">
+
+          Send
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

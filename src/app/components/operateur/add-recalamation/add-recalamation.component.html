@@ -12,7 +12,7 @@
         </h2>
 
         <p class="text-muted text-center mt-1 mb-4">
-          Veuillez remplir les informations ci-dessous.
+          Veuillez décrire votre problème. Le système analysera automatiquement votre demande.
         </p>
 
         <div class="px-4">
@@ -46,67 +46,15 @@
               </label>
 
               <textarea
-                rows="5"
+                rows="6"
                 class="form-control"
                 formControlName="description"
-                placeholder="Enter description"
+                placeholder="Describe your issue in detail..."
               ></textarea>
 
-            </div>
-
-            <!-- Priority -->
-            <div class="mb-3">
-
-              <label class="form-label">
-                Priority
-              </label>
-
-              <select
-                class="form-control"
-                formControlName="priority"
-              >
-
-                <option [value]="1">
-                  Low
-                </option>
-
-                <option [value]="2">
-                  Medium
-                </option>
-
-                <option [value]="3">
-                  High
-                </option>
-
-              </select>
-
-            </div>
-
-            <!-- Status -->
-            <div class="mb-3">
-
-              <label class="form-label">
-                Status
-              </label>
-
-              <select
-                class="form-control"
-                formControlName="status"
-              >
-
-                <option [value]="0">
-                  Pending
-                </option>
-
-                <option [value]="1">
-                  In Progress
-                </option>
-
-                <option [value]="2">
-                  Resolved
-                </option>
-
-              </select>
+              <small class="text-muted">
+                Category and priority will be automatically detected by AI.
+              </small>
 
             </div>
 
@@ -114,7 +62,7 @@
             <div class="mb-3">
 
               <label class="form-label">
-                Files
+                Files (optional)
               </label>
 
               <input
@@ -143,6 +91,18 @@
 
             </div>
 
+            <!-- AI INFO BOX -->
+            <div class="alert alert-info py-2 mb-3">
+
+              <strong>AI Classification:</strong>
+              Your request will be automatically classified into:
+              <ul class="mb-0">
+                <li>Category (REVOCATION, PIN_RESET, etc.)</li>
+                <li>Priority (LOW, MEDIUM, HIGH, URGENT)</li>
+              </ul>
+
+            </div>
+
             <!-- Submit -->
             <div class="mb-1 text-center d-grid">
 
@@ -153,11 +113,11 @@
               >
 
                 <span *ngIf="!loading">
-                  {{ isEditMode ? 'Update' : 'Create' }}
+                  {{ isEditMode ? 'Update' : 'Submit Reclamation' }}
                 </span>
 
                 <span *ngIf="loading">
-                  Loading...
+                  Processing AI...
                 </span>
 
               </button>
