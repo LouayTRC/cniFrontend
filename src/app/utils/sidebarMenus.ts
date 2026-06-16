@@ -45,8 +45,8 @@ export const RESPONSABLE_MENU: MenuItem[] = [
   {
     key: 'apps-dossiers',
     icon: 'solar:letter-broken',
-    label: 'Gestion des Dossiers',
-    link: '/responsable/dossiers',
+    label: 'Gestion des Reclamations',
+    link: '/responsable/reclamations',
   },
 ]
 
@@ -59,16 +59,22 @@ export const OPERATEUR_MENU: MenuItem[] = [
     isTitle: true,
   },
   {
+    key: 'apps-chat',
+    icon: 'solar:chat-round-call-broken',
+    label: 'Messagerie',
+    link: '/operateur/chat',
+  },
+  {
     key: 'apps-reclamations',
     icon: 'solar:chat-round-call-broken',
     label: 'Réclamations',
     link: '/operateur/reclamations',
   },
   {
-    key: 'apps-chat',
+    key: 'apps-chatbot',
     icon: 'solar:chat-round-call-broken',
-    label: 'Chat',
-    link: '/operateur/chat',
+    label: 'Chatbot',
+    link: '/operateur/chatbot',
   }
 ]
 

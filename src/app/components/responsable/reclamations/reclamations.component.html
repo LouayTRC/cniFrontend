@@ -199,14 +199,3 @@
     </div>
 
 </div>
-
-<!-- POPUP -->
-<app-popup
-    [visible]="showPopup"
-    title="Suppression réclamation"
-    message="Voulez-vous vraiment supprimer cette réclamation ?"
-    icon="bx bx-error-circle"
-    type="danger"
-    (confirm)="confirmDelete()"
-    (cancel)="closePopup()">
-</app-popup>
