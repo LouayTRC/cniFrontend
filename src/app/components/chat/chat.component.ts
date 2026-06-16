@@ -19,7 +19,7 @@ import { UserService } from '@/app/services/user.service';
 export class ChatComponent {
   store = inject(Store)
   headers!: HttpHeaders
-  contacts!: User[]
+  contacts: User[] = []
   selectedContact!: User
   connectedUser!: User
 
@@ -37,7 +37,8 @@ export class ChatComponent {
             });
             this.userService.getAllUsers(this.headers).subscribe((res) => {
               this.contacts = res.filter((u: User) => u.id !== this.connectedUser.id);
-
+              console.log("cint",this.contacts);
+              
             })
 
 
