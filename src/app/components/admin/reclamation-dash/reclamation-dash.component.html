@@ -1,0 +1,147 @@
+<!-- LOADER -->
+<div *ngIf="loading" class="text-center my-3">
+  <div class="spinner-border text-primary"></div>
+  <div>Chargement...</div>
+</div>
+
+<div class="container-fluid py-3" *ngIf="!loading">
+
+  <div class="row g-3">
+
+    <!-- ================= TABLE ================= -->
+    <div class="col-md-8">
+
+      <div class="card shadow-sm">
+
+        <div class="card-body">
+
+          <!-- SEARCH -->
+          <div class="input-group mb-3">
+            <span class="input-group-text">
+              <i class="bx bx-search"></i>
+            </span>
+
+            <input
+              type="search"
+              class="form-control"
+              [(ngModel)]="searchText"
+              (input)="searchReclamation()"
+              placeholder="Rechercher une réclamation..."
+            />
+          </div>
+
+          <!-- TABLE -->
+          <div class="table-responsive">
+
+            <table class="table table-borderless align-middle">
+
+              <thead class="table-light">
+                <tr>
+                  <th>#</th>
+                  <th>Réclamation</th>
+                  <th>AI & Infos</th>
+                  <th>Meta</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr *ngFor="let r of filteredReclamations; let i = index">
+
+                  <td class="fw-bold text-muted">{{ i + 1 }}</td>
+
+                  <td style="min-width:280px;">
+                    <div class="fw-semibold">{{ r.title }}</div>
+                    <div class="text-muted small">{{ r.description }}</div>
+
+                    <div class="mt-2 d-flex gap-1 flex-wrap">
+                      <span class="badge bg-dark">{{ r.category }}</span>
+
+                      <span class="badge" [ngClass]="(r.priority | priority)?.badgeClass">
+                        {{ (r.priority | priority)?.text }}
+                      </span>
+
+                      <span class="badge" [ngClass]="(r.status | status)?.badgeClass">
+                        {{ (r.status | status)?.text }}
+                      </span>
+                    </div>
+                  </td>
+
+                  <td class="small">
+                    📧 {{ r.email || 'N/A' }}<br>
+                    📱 {{ r.phone || 'N/A' }}<br>
+                    <hr>
+                    {{ r.summary || 'Aucun résumé IA' }}
+                  </td>
+
+                  <td class="small text-muted">
+                    📅 {{ r.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  </td>
+
+                  <td>
+                    <span *ngIf="r.status !== 0"
+                          class="fw-semibold"
+                          [ngClass]="r.status === 1 ? 'text-success' : 'text-danger'">
+
+                      {{ r.status === 1 ? 'Validée' : 'Rejetée' }}
+
+                    </span>
+
+                    <span *ngIf="r.status === 0" class="text-warning small">
+                      En attente
+                    </span>
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= CHARTS ================= -->
+    <div class="col-md-4 d-flex flex-column gap-3">
+
+      <!-- PIE: CATEGORIES -->
+      <div class="card">
+        <div class="card-body">
+          <h6>Catégories</h6>
+
+          <apx-chart
+            [series]="categoryChart.series!"
+            [chart]="categoryChart.chart!"
+            [labels]="categoryChart.labels!"
+            [colors]="categoryChart.colors!">
+          </apx-chart>
+
+        </div>
+      </div>
+
+      <!-- BAR: STATUS -->
+      <div class="card">
+        <div class="card-body">
+          <h6>Status</h6>
+
+          <apx-chart
+            [series]="statusChart.series!"
+            [chart]="statusChart.chart!"
+            [xaxis]="statusChart.xaxis!"
+            [colors]="statusChart.colors!">
+          </apx-chart>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

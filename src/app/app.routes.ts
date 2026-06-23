@@ -10,6 +10,7 @@ import { OperateurReclamationsComponent } from '@component/operateur/operateur-r
 import { AddReclamationComponent } from '@component/operateur/add-recalamation/add-recalamation.component';
 import { ChatbotComponent } from '@component/operateur/chatbot/chatbot.component';
 import { ReclamationsComponent } from '@component/responsable/reclamations/reclamations.component';
+import { ReclamationDashComponent } from '@component/admin/reclamation-dash/reclamation-dash.component';
 
 
 export const routes: Routes = [
@@ -43,6 +44,11 @@ export const routes: Routes = [
         data: { title: 'Messagerie' },
       },
       {
+        path: 'reclamations',
+        component: ReclamationDashComponent,
+        data: { title: 'Gestion des reclamations' },
+      },
+      {
         path: '',
         redirectTo: 'users',
         pathMatch: "full"
@@ -58,7 +64,6 @@ export const routes: Routes = [
         path: 'reclamations',
         component: OperateurReclamationsComponent,
         data: { title: 'Réclamations' },
-        
       },
       {
         path: 'reclamations/add',
@@ -81,6 +86,11 @@ export const routes: Routes = [
         path: 'chatbot',
         component: ChatbotComponent,
         data: { title: 'Chatbot' },
+      },
+      {
+        path: '',
+        redirectTo: 'reclamations',
+        pathMatch: "full"
       }
     ]
   },
@@ -101,6 +111,11 @@ export const routes: Routes = [
         data: { title: 'Réclamations' },
         
       },
+      {
+        path: '',
+        redirectTo: 'reclamations',
+        pathMatch: "full"
+      }
     ]
   },
   {

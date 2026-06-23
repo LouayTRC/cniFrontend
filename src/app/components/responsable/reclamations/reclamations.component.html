@@ -11,29 +11,16 @@
         <div class="card-body">
 
             <!-- HEADER -->
-            <div class="d-flex flex-row justify-content-between gap-3 mb-3">
+            <div class="d-flex justify-content-between gap-3 mb-3">
 
                 <div class="input-group w-100 w-md-50">
                     <span class="input-group-text">
-                        <i class="bx bx-search-alt"></i>
+                        <i class="bx bx-search"></i>
                     </span>
 
-                    <input
-                        type="search"
-                        class="form-control"
-                        [(ngModel)]="searchText"
-                        (input)="searchReclamation()"
-                        placeholder="Rechercher une réclamation..."
-                    />
+                    <input type="search" class="form-control" [(ngModel)]="searchText" (input)="searchReclamation()"
+                        placeholder="Rechercher une réclamation..." />
                 </div>
-
-                <a
-                    routerLink="/operateur/reclamations/add"
-                    class="btn btn-primary"
-                >
-                    <i class="bx bx-plus me-1"></i>
-                    Ajouter
-                </a>
 
             </div>
 
@@ -54,22 +41,15 @@
 
                     <tbody>
 
-                        <tr *ngFor="let reclamation of filteredReclamations; let i = index"
-                            class="border-bottom">
+                        <tr *ngFor="let reclamation of filteredReclamations; let i = index">
 
-                            <!-- INDEX -->
-                            <td class="fw-bold text-muted">
-                                {{ i + 1 }}
-                            </td>
+                            <td class="fw-bold text-muted">{{ i + 1 }}</td>
 
-                            <!-- MAIN INFO -->
-                            <td style="min-width: 280px;">
+                            <!-- MAIN -->
+                            <td style="min-width:280px;">
+                                <div class="fw-semibold">{{ reclamation.title }}</div>
 
-                                <div class="fw-semibold">
-                                    {{ reclamation.title }}
-                                </div>
-
-                                <div class="text-muted small mt-1 text-break">
+                                <div class="text-muted small mt-1">
                                     {{ reclamation.description }}
                                 </div>
 
@@ -79,104 +59,73 @@
                                         {{ reclamation.category || 'N/A' }}
                                     </span>
 
-                                    <span class="badge"
-                                        [ngClass]="(reclamation.priority | priority)?.badgeClass">
+                                    <span class="badge" [ngClass]="(reclamation.priority | priority)?.badgeClass">
                                         {{ (reclamation.priority | priority)?.text }}
                                     </span>
 
-                                    <span class="badge"
-                                        [ngClass]="(reclamation.status | status)?.badgeClass">
+                                    <span class="badge" [ngClass]="(reclamation.status | status)?.badgeClass">
                                         {{ (reclamation.status | status)?.text }}
                                     </span>
 
                                 </div>
-
                             </td>
 
-                            <!-- AI INFO -->
-                            <td style="min-width: 320px;">
+                            <!-- AI -->
+                            <td style="min-width:300px;">
+                                <div class="border rounded p-2 bg-light small">
 
-                                <div class="border rounded p-2 bg-light">
-
-                                    <!-- EXTRACTED -->
-                                    <div class="mb-2">
-
-                                        <div *ngIf="reclamation.email || reclamation.phone; else noExtract"
-                                             class="small">
-
-                                            <div>📧 {{ reclamation.email || 'N/A' }}</div>
-                                            <div>📱 {{ reclamation.phone || 'N/A' }}</div>
-
-                                        </div>
-
-                                        <ng-template #noExtract>
-                                            <span class="text-muted small">
-                                                Pas d'informations à extraire
-                                            </span>
-                                        </ng-template>
-
+                                    <div>
+                                        📧 {{ reclamation.email || 'N/A' }}<br>
+                                        📱 {{ reclamation.phone || 'N/A' }}
                                     </div>
 
-                                    <!-- SUMMARY -->
-                                    <div class="small border-top pt-2">
+                                    <hr>
 
-                                        <strong>Résumé IA:</strong><br>
-
-                                        <span *ngIf="reclamation.summary; else noSummary">
-                                            {{ reclamation.summary }}
-                                        </span>
-
-                                        <ng-template #noSummary>
-                                            <span class="text-muted">
-                                                Aucun résumé
-                                            </span>
-                                        </ng-template>
-
-                                    </div>
+                                    <strong>Résumé IA:</strong><br>
+                                    {{ reclamation.summary || 'Aucun résumé' }}
 
                                 </div>
-
                             </td>
 
                             <!-- META -->
-                            <td style="min-width: 160px;" class="small text-muted">
-
-                                <div>
-                                    📅 {{ reclamation.createdAt | date:'dd/MM/yyyy HH:mm' }}
-                                </div>
-
-                                <div class="mt-2">
-                                    <button
-                                        class="btn btn-sm btn-outline-primary"
-                                        (click)="downloadFiles(reclamation.id)">
-                                        <i class="bx bx-download"></i>
-                                    </button>
-                                </div>
-
+                            <td class="small text-muted">
+                                📅 {{ reclamation.createdAt | date:'dd/MM/yyyy HH:mm' }}
                             </td>
 
                             <!-- ACTIONS -->
-                            <td style="min-width: 120px;">
+                            <td>
 
-                                <button
-                                    class="btn btn-sm btn-outline-secondary me-1"
-                                    (click)="goToUpdate(reclamation.id)">
-                                    <i class="bx bx-edit"></i>
-                                </button>
+                                <!-- ONLY IF PENDING -->
+                                <div *ngIf="reclamation.status === 0" class="d-flex gap-2">
 
-                                <button
-                                    class="btn btn-sm btn-outline-danger"
-                                    (click)="openDeletePopup(reclamation.id)"
-                                    [disabled]="deletingId === reclamation.id">
+                                    <!-- VALIDATE -->
+                                    <button class="btn btn-sm btn-success"
+                                        (click)="changeReclamationStatus(reclamation.id, 1)"
+                                        [disabled]="processingId === reclamation.id">
 
-                                    <span *ngIf="deletingId === reclamation.id"
-                                          class="spinner-border spinner-border-sm">
-                                    </span>
+                                        <span *ngIf="processingId === reclamation.id"
+                                            class="spinner-border spinner-border-sm"></span>
 
-                                    <i *ngIf="deletingId !== reclamation.id"
-                                       class="bx bx-trash"></i>
+                                        <i *ngIf="processingId !== reclamation.id" class="bx bx-check"></i>
+                                    </button>
 
-                                </button>
+                                    <!-- REJECT -->
+                                    <button class="btn btn-sm btn-danger"
+                                        (click)="changeReclamationStatus(reclamation.id, -1)"
+                                        [disabled]="processingId === reclamation.id">
+
+                                        <i class="bx bx-x"></i>
+                                    </button>
+
+                                </div>
+
+                                <!-- IF NOT PENDING -->
+                                <span *ngIf="reclamation.status !== 0" class="small fw-semibold"
+                                    [ngClass]="reclamation.status === 1 ? 'text-success' : 'text-danger'">
+
+                                    {{ reclamation.status === 1 ? 'Validée' : 'Rejetée' }}
+
+                                </span>
 
                             </td>
 

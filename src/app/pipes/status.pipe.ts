@@ -20,17 +20,12 @@ export class StatusPipe implements PipeTransform {
         };
       case 1:
         return {
-          text: 'En cours',
-          badgeClass: 'badge-soft-primary'
-        };
-      case 2:
-        return {
-          text: 'Résolu',
+          text: 'Traitée',
           badgeClass: 'badge-soft-success'
         };
       case -1:
         return {
-          text: 'Rejeté',
+          text: 'Rejetée',
           badgeClass: 'badge-soft-danger'
         };
       default:
