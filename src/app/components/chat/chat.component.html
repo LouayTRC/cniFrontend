@@ -7,10 +7,8 @@
         id="Contactoffcanvas"
         aria-labelledby="ContactoffcanvasLabel"
       >
-      @if(contacts.length > 0){
+      @if(contacts){
         <app-contacts [contacts]="contacts" (contactSelected)="onContactSelected($event)" />
-      } @else {
-        <p class="p-3 text-muted">Loading contacts...</p>
       }
       </div>
     </div>

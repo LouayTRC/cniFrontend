@@ -19,7 +19,7 @@ import { UserService } from '@/app/services/user.service';
 export class ChatComponent {
   store = inject(Store)
   headers!: HttpHeaders
-  contacts: User[] = []
+  contacts!: User[]
   selectedContact!: User
   connectedUser!: User
 
