@@ -109,4 +109,18 @@ export class ReclamationService {
       { headers }
     );
   }
+
+
+  changeReclamationStatus(
+    id: string,
+    status: number,
+    headers: HttpHeaders
+  ): Observable<any> {
+
+    return this.http.put(
+      `${this.baseUrl}/status/${id}/${status}`,
+      {},
+      { headers }
+    );
+  }
 }

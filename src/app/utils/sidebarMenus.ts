@@ -24,8 +24,14 @@ export const ADMIN_MENU: MenuItem[] = [
   {
     key: 'admin-users',
     icon: 'humbleicons:users',
-    label: 'Gestion des Utilisateurs',
+    label: 'Utilisateurs',
     link: '/admin/users',
+  },
+  {
+    key: 'apps-reclamations',
+    icon: 'solar:danger-outline',
+    label: 'Réclamations',
+    link: '/admin/reclamations',
   },
   
 ]
@@ -37,15 +43,9 @@ export const RESPONSABLE_MENU: MenuItem[] = [
     isTitle: true,
   },
   {
-    key: 'apps-chat',
-    icon: 'solar:chat-round-call-broken',
-    label: 'Chat',
-    link: '/responsable/chat',
-  },
-  {
-    key: 'apps-dossiers',
-    icon: 'solar:letter-broken',
-    label: 'Gestion des Reclamations',
+    key: 'apps-reclamations',
+    icon: 'solar:danger-outline',
+    label: 'Réclamations',
     link: '/responsable/reclamations',
   },
 ]
@@ -59,20 +59,14 @@ export const OPERATEUR_MENU: MenuItem[] = [
     isTitle: true,
   },
   {
-    key: 'apps-chat',
-    icon: 'solar:chat-round-call-broken',
-    label: 'Messagerie',
-    link: '/operateur/chat',
-  },
-  {
     key: 'apps-reclamations',
-    icon: 'solar:chat-round-call-broken',
+    icon: 'solar:danger-outline',
     label: 'Réclamations',
     link: '/operateur/reclamations',
   },
   {
     key: 'apps-chatbot',
-    icon: 'solar:chat-round-call-broken',
+    icon: 'mdi:robot-outline',
     label: 'Chatbot',
     link: '/operateur/chatbot',
   }

@@ -8,7 +8,6 @@ import { HttpHeaders } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { PopupComponent } from '@component/reusables/popup/popup.component';
 import { Store } from '@ngrx/store';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ToastrService } from 'ngx-toastr';
@@ -28,6 +27,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './reclamations.component.scss'
 })
 export class ReclamationsComponent {
+
   reclamations: Reclamation[] = [];
   filteredReclamations: Reclamation[] = [];
 
@@ -39,45 +39,26 @@ export class ReclamationsComponent {
   token: string = '';
 
   loading: boolean = false;
-  deletingId: string | null = null;
+  processingId: string | null = null;
 
-  showPopup: boolean = false;
-  selectedReclamationId: string | null = null;
-
-  // ================= CATEGORY LABELS =================
-  categoryLabels: Record<string, string> = {
-    REVOCATION: 'Révocation (Sécurité)',
-    PIN_RESET: 'Réinitialisation PIN',
-    DIGITAL_ID: 'Identité numérique',
-    PHONE_CHANGE: 'Changement de téléphone',
-    REQUEST_UPDATE: 'Mise à jour profil',
-    OTHER: 'Autre'
-  };
-
-  constructor(private reclamationService: ReclamationService) { }
+  constructor(private reclamationService: ReclamationService) {}
 
   ngOnInit(): void {
-
     this.loading = true;
 
     this.store.select(selectToken).subscribe({
       next: (token) => {
-
         if (!token) return;
 
         this.token = token;
 
-        this.reclamationService
-          .getAllReclamations(this.getHeaders())
+        this.reclamationService.getAllReclamations(this.getHeaders())
           .subscribe({
-
             next: (res: Reclamation[]) => {
               this.reclamations = res;
               this.filteredReclamations = res;
-              this.prepareStats();
               this.loading = false;
             },
-
             error: () => {
               this.loading = false;
               this.toastr.error("Erreur chargement réclamations", "Erreur");
@@ -87,11 +68,6 @@ export class ReclamationsComponent {
     });
   }
 
-  // ================= CATEGORY HELPER =================
-  getCategoryLabel(category: string): string {
-    return this.categoryLabels[category] || category;
-  }
-
   private getHeaders(): HttpHeaders {
     return new HttpHeaders({
       Authorization: `Bearer ${this.token}`
@@ -99,96 +75,46 @@ export class ReclamationsComponent {
   }
 
   searchReclamation() {
-    this.filteredReclamations =
-      this.reclamations.filter(r =>
-        r.title.toLowerCase().includes(this.searchText.toLowerCase()) ||
-        r.description.toLowerCase().includes(this.searchText.toLowerCase())
-      );
+    this.filteredReclamations = this.reclamations.filter(r =>
+      r.title.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      r.description.toLowerCase().includes(this.searchText.toLowerCase())
+    );
   }
 
-  goToUpdate(id: string) {
-    this.router.navigate(['/operateur/reclamations/edit', id]);
-  }
+  // =========================
+  // CHANGE STATUS (NEW)
+  // =========================
+  changeReclamationStatus(id: string, status: number) {
 
-  openDeletePopup(id: string) {
-    this.selectedReclamationId = id;
-    this.showPopup = true;
-  }
+    this.processingId = id;
 
-  closePopup() {
-    this.showPopup = false;
-    this.selectedReclamationId = null;
-  }
-
-  confirmDelete() {
-
-    if (!this.selectedReclamationId) return;
-
-    const id = this.selectedReclamationId;
-
-    this.deletingId = id;
-
-    this.reclamationService
-      .deleteReclamation(id, this.getHeaders())
+    this.reclamationService.changeReclamationStatus(id, status, this.getHeaders())
       .subscribe({
 
         next: () => {
-          this.reclamations = this.reclamations.filter(r => r.id !== id);
-          this.filteredReclamations = this.filteredReclamations.filter(r => r.id !== id);
-          this.prepareStats();
 
-          this.toastr.success("Réclamation supprimée avec succès", "Success");
+          const updated = this.reclamations.map(r => {
+            if (r.id === id) {
+              return { ...r, status };
+            }
+            return r;
+          });
 
-          this.deletingId = null;
-          this.closePopup();
+          this.reclamations = updated;
+          this.filteredReclamations = updated;
+
+          this.processingId = null;
+
+          this.toastr.success(
+            status === 1 ? "Réclamation validée" : "Réclamation rejetée",
+            "Succès"
+          );
         },
 
         error: () => {
-          this.deletingId = null;
-          this.toastr.error("Échec suppression réclamation", "Erreur");
-          this.loading = false;
+          this.processingId = null;
+          this.toastr.error("Erreur lors de la mise à jour", "Erreur");
         }
       });
-  }
-
-  prepareStats() {
-
-    const pending = this.reclamations.filter(r => r.status === 0).length;
-    const inProgress = this.reclamations.filter(r => r.status === 1).length;
-    const resolved = this.reclamations.filter(r => r.status === 2).length;
-    const rejected = this.reclamations.filter(r => r.status === -1).length;
-
-    return {
-      totalReclamations: this.reclamations.length,
-      pending,
-      inProgress,
-      resolved,
-      rejected
-    };
-  }
-
-  downloadFiles(reclamationId: string) {
-
-    this.reclamationService.downloadAllFiles(
-      reclamationId,
-      this.getHeaders()
-    ).subscribe({
-
-      next: (blob: Blob) => {
-
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-
-        a.href = url;
-        a.download = 'reclamation-files.zip';
-        a.click();
-
-        window.URL.revokeObjectURL(url);
-      },
-
-      error: () => {
-        this.toastr.error('Error downloading files', 'Error');
-      }
-    });
   }
 }

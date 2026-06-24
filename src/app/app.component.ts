@@ -6,6 +6,7 @@ import {
   NgProgressModule,
   type NgProgressRef,
 } from 'ngx-progressbar'
+import { AppTitleService } from './services/app-title.service';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +22,8 @@ export class AppComponent implements OnInit  {
   private router = inject(Router)
   
 
-  constructor() {
-   
+  constructor(private appTitle: AppTitleService) {
+    this.appTitle.init();
   }
 
   ngOnInit(): void {
